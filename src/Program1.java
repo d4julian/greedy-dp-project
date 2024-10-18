@@ -14,29 +14,42 @@ class Program1{
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
     public static Result program1(int n, int w, int[] heights, int[] widths) {
+        /* Starting variables which are used to keep track of current platform's width, cost (height), max height on each platform and total platforms needed. */
         int currentWidth = 0, cost = 0, maxHeight = 0, platforms = 0;
+
+        /* Map used to keep track of how many statues on each platform.
+        *  Key: platform index, Value: number of statues */
         Map<Integer, Integer> platformStatueMap = new HashMap<>();
         int currentStatueCount = 0;
 
-        for (int i = 0; i < n; i++) {
-            if (currentWidth + widths[i] > w) {
+
+        for (int i = 0; i < n; i++) { /* Iterate through all the statues */
+            if (currentWidth + widths[i] > w) { /* Check if adding a new sculpture goes over the width limit */
+                /* Creating a new platform:
+                 * Put platform on the platformStatueMap with currentStatueCount as value
+                 * Add maxHeight of the platform to the cost
+                 * Increment the platforms by 1
+                 */
                 platformStatueMap.put(platforms, currentStatueCount);
+                cost += maxHeight;
                 platforms++;
 
-                cost += maxHeight;
-
+                /* Reset variables to prepare for new platform */
                 maxHeight = 0;
                 currentWidth = 0;
                 currentStatueCount = 0;
             }
+            /* Add current statue to the platform */
             currentWidth += widths[i];
-            maxHeight = Math.max(maxHeight, heights[i]);
+            maxHeight = Math.max(maxHeight, heights[i]); /* We set the maxHeight of the platform to the max out of maxHeight or heights[i] */
             currentStatueCount++;
         }
 
+        /* Finally we add the last platform */
         platformStatueMap.put(platforms, currentStatueCount);
         cost += maxHeight;
 
+        /* Use stream to create an array */
         int[] statuesSizeArray = platformStatueMap.values()
                 .stream()
                 .mapToInt(Integer::intValue)

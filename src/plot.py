@@ -3,9 +3,9 @@ from matplotlib.ticker import FuncFormatter
 
 input_sizes = [100000, 250000, 500000, 1000000, 10000000]
 
-program1_times = [3, 5, 11, 24, 331]
-program2_times = [4, 8, 18, 28, 320]
-plt.plot(input_sizes, program1_times, label='Program1', marker='o')
+program1_times = [3, 8, 7, 37, 591]
+program2_times = [4, 4, 6, 11, 127]
+# plt.plot(input_sizes, program1_times, label='Program1', marker='o')
 plt.plot(input_sizes, program2_times, label='Program2', marker='o', color='orange')
 
 plt.xlabel('Input Size')
