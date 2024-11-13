@@ -12,48 +12,73 @@ class Program3{
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
     private static Result program3(int n, int w, int[] heights, int[] widths) {
-        int[] backtrack = new int[n + 1];
-        int[] dp = calculateOptimalTotalHeight(n, w, heights, widths, backtrack);
-        return arrangePlatforms(n, dp, backtrack);
-    }
+        /* Initialize the optimal cost to the maximum possible integer value and the list to store the number of sculptures to platform*/
+        int optimalCost = Integer.MAX_VALUE;
+        List<Integer> optimalPlatformSculptures = null;
 
-    private static int[] calculateOptimalTotalHeight(int n, int w, int[] heights, int[] widths, int[] backtrack) {
-        int[] dp = new int[n + 1]; /* Array to store minimum height cost for first i statues */
-        dp[0] = 0; /* Base case: no statues has zero cost */
+        /*
+         * Iterate through all possible partitions (2^(n-1) possible).
+         * Partitions are the spaces in between the sculptures.
+         */
+        for (int partition = 0; partition < ((int) Math.pow(2, n - 1)); partition++) {
+            /* Initialize variables for the current partition */
+            int cost = 0, currentWidth = 0, maxHeight = 0, sculpturesOnPlatform = 0;
+            List<Integer> platformSculptures = new ArrayList<>();
+            boolean isValid = true;
 
-        for (int i = 1; i < n + 1; i++) {
-            dp[i] = Integer.MAX_VALUE; /* Initialize with max value to find minimum cost */
-            int totalWidth = 0, maxHeight = 0; /* Reset width and height for each platform ending at i */
+            /* Process each sculpture to assign it to a platform */
+            for (int i = 0; i < n; i++) {
+                /*
+                 * Check if adding the current sculpture exceeds the platform's width limit
+                 * If it exceeds the platform's width limit, then set isValid to false and break the loop
+                 */
+                if (currentWidth + widths[i] > w) {
+                    isValid = false;
+                    break;
+                }
 
-            for (int j = i; j >= 1; j--) { /* Consider all possible platforms ending at statue i */
-                totalWidth += widths[j - 1]; /* Accumulate width of statues from j to i */
-                if (totalWidth > w) break; /* Stop if platform width exceeds limit */
-                maxHeight = Math.max(maxHeight, heights[j - 1]); /* Track the tallest statue on current platform */
-                int cost = dp[j - 1] + maxHeight; /* Calculate height cost if platform ends at i */
-                if (cost < dp[i]) { /* If new cost is lower, update dp and record start index */
-                    dp[i] = cost;
-                    backtrack[i] = j - 1; /* Record starting index of platform ending at i */
+                /* Add the current sculpture's width to the platform's total width */
+                currentWidth += widths[i];
+                /* Update the maximum height for the current platform */
+                maxHeight = Math.max(maxHeight, heights[i]);
+                /* Increment the count of sculptures on the current platform */
+                sculpturesOnPlatform++;
+
+                /*
+                 * Check if a partition exists after the current sculpture.
+                 * We can do this by checking if the i-th bit in 'partition' is set.
+                 */
+                if (i < n - 1 && (partition & (1 << i)) != 0) {
+                    /* Add the maximum height of the current platform to the total cost */
+                    cost += maxHeight;
+                    /* Add the number of sculptures on the current platform to the list*/
+                    platformSculptures.add(sculpturesOnPlatform);
+
+                    /* Reset variables for the next platform */
+                    currentWidth = 0;
+                    maxHeight = 0;
+                    sculpturesOnPlatform = 0;
+
                 }
             }
+            /* If the partition is invalid, then we continue the loop */
+            if (!isValid) continue;
+            /* After processing all sculptures, we can add the cost and sculpture count for the last platform. */
+            cost += maxHeight;
+            platformSculptures.add(sculpturesOnPlatform);
+            /*
+             * If the cost of the current partition is less than the optimalCost,
+             * we can update the optimal cost and the optimalPlatformSculptures list
+             */
+            if (cost < optimalCost) {
+                optimalCost = cost;
+                optimalPlatformSculptures = new ArrayList<>(platformSculptures);
+            }
+
         }
 
-        return dp;
-    }
-
-    private static Result arrangePlatforms(int n, int[] dp, int[] backtrack) {
-        List<Integer> platformCounts = new ArrayList<>(); /* Stores the number of sculptures on each platform */
-        int index = n; /* Start from last sculpture and trace back */
-        while (index > 0) {
-            int startIndex = backtrack[index]; /* Get start index of platform */
-            int scupltureCountOnPlatform = index - startIndex; /* Calculate number of sculptures on this platform */
-            platformCounts.add(scupltureCountOnPlatform); /* Add count to list */
-            index = startIndex; /* Move to the start of the previous platform */
-        }
-        Collections.reverse(platformCounts); /* Reverse to get platforms in order */
-
-        int[] sculpturesPerPlatform = platformCounts.stream().mapToInt(Integer::intValue).toArray(); /* Convert list to array */
-
-        return new Result(platformCounts.size(), dp[n], sculpturesPerPlatform); /* Return result with platforms, total height, and counts */
+        /* Stream the values of the list to an array and return the result */
+        return new Result(optimalPlatformSculptures.size(), optimalCost, optimalPlatformSculptures.stream().mapToInt(Integer::intValue).toArray());
     }
 
     public static void main(String[] args){

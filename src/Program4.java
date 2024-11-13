@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 class Program4{
     public record Result(int numPlatforms, int totalHeight, int[] numStatues) {}
