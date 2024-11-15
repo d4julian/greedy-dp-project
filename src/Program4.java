@@ -12,9 +12,9 @@ class Program4{
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
     public static Result program4(int n, int w, int[] heights, int[] widths) {
-        // Initialize dp array and tracking arrays
+        // Initialize dp array and tracking arrays. dp is the minimum cost to arrange the first i sculptures on k platforms
         int[][] dp = new int[n + 1][n + 1];
-        int[][] numStatues = new int[n + 1][n + 1];
+        int[][] numStatues = new int[n + 1][n + 1]; //holds the number of statues on k-th platform after placing the first i statues
         int[][] prevPlatformEnd = new int[n + 1][n + 1];
 
         for (int i = 0; i <= n; i++) {
@@ -22,18 +22,20 @@ class Program4{
         }
         dp[0][0] = 0; // Base case: no sculptures require zero cost
 
-        // Populate the DP table
+        // Fill the DP table by calculating the minimum height costs for different platform configurations
         calculateMinHeightCost(n, w, heights, widths, dp, numStatues, prevPlatformEnd);
 
         // Determine the minimum height cost and optimal number of platforms
         int optimalPlatforms = findOptimalPlatformCount(n, dp);
         int totalHeight = dp[n][optimalPlatforms];
 
-
+        
+        //Now reconstruct the list of statues distributes across platforms
         List<Integer> platformsList = new ArrayList<>();
         int currentIndex = n;
         int platformCount = optimalPlatforms;
 
+        //perform backtracking through the dp array to determine how many statues were placede on each platform 
         while (currentIndex > 0 && platformCount > 0) {
             platformsList.add(numStatues[currentIndex][platformCount]);
             currentIndex = prevPlatformEnd[currentIndex][platformCount];
@@ -52,8 +54,10 @@ class Program4{
 
     // Calculates the minimum height cost using DP with Θ(n³) complexity
     private static void calculateMinHeightCost(int n, int w, int[] heights, int[] widths, int[][] dp, int[][] numStatues, int[][] prevPlatformEnd) {
+        //Iterate over all possible endpoints i and platform counts k
         for (int i = 1; i <= n; i++) {
             for (int k = 1; k <= i; k++) {
+                //For each partition, compute the platform's cost (min height) and update the dp array
                 computePlatformCost(i, k, w, heights, widths, dp, numStatues, prevPlatformEnd);
             }
         }
@@ -64,6 +68,7 @@ class Program4{
         int currentWidth = 0;
         int maxHeight = 0;
 
+        //Explore all valid groupings from statues i to some statues j, adding sculptures to the current platform
         for (int j = i; j > 0; j--) {
             currentWidth += widths[j - 1];
 
@@ -75,6 +80,7 @@ class Program4{
             // Calculate and update dp[i][k] if this platform arrangement is optimal
             if (dp[j - 1][k - 1] != Integer.MAX_VALUE) {
                 int cost = dp[j - 1][k - 1] + maxHeight;
+               //a lower cost was found so now we want to update the dp array with this newer value
                 if (cost < dp[i][k]) {
                     dp[i][k] = cost;
                     prevPlatformEnd[i][k] = j - 1;
@@ -89,6 +95,7 @@ class Program4{
         int totalHeight = Integer.MAX_VALUE;
         int optimalPlatforms = 0;
 
+        //Iterate over the dp table to find the optimal number of platforms based on minimum cost
         for (int k = 1; k <= n; k++) {
             if (dp[n][k] < totalHeight) {
                 totalHeight = dp[n][k];
