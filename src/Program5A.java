@@ -11,7 +11,7 @@ class Program5A{
     * @param widths array of widths of the statues
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
-     private static Result program5A(int n, int w, int[] heights, int[] widths) {
+    public static Result program5A(int n, int w, int[] heights, int[] widths) {
         // Memoization array to store minimum height cost up to each sculpture position
         int[] memo = new int[n + 1];
         Arrays.fill(memo, -1); // Initialize with -1 to indicate undefined values

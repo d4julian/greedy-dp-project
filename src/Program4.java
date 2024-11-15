@@ -11,7 +11,7 @@ class Program4{
     * @param widths array of widths of the statues
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
-    private static Result program4(int n, int w, int[] heights, int[] widths) {
+    public static Result program4(int n, int w, int[] heights, int[] widths) {
         // Initialize dp array and tracking arrays
         int[][] dp = new int[n + 1][n + 1];
         int[][] numStatues = new int[n + 1][n + 1];

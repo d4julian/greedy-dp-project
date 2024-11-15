@@ -11,7 +11,7 @@ class Program3{
     * @param widths array of widths of the statues
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
-    private static Result program3(int n, int w, int[] heights, int[] widths) {
+    public static Result program3(int n, int w, int[] heights, int[] widths) {
         /* Initialize the optimal cost to the maximum possible integer value and the list to store the number of sculptures to platform*/
         int optimalCost = Integer.MAX_VALUE;
         List<Integer> optimalPlatformSculptures = null;
@@ -78,7 +78,8 @@ class Program3{
         }
 
         /* Stream the values of the list to an array and return the result */
-        return new Result(optimalPlatformSculptures.size(), optimalCost, optimalPlatformSculptures.stream().mapToInt(Integer::intValue).toArray());
+        if (optimalPlatformSculptures == null) return new Result(0, 0, new int[0]);
+        else return new Result(optimalPlatformSculptures.size(), optimalCost, optimalPlatformSculptures.stream().mapToInt(Integer::intValue).toArray());
     }
 
     public static void main(String[] args){

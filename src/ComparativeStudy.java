@@ -34,7 +34,7 @@ public class ComparativeStudy {
     }
 
     public static void runExperiments(int[] inputSizes, int maxWidth, int maxHeight) {
-        System.out.println("Input Size\tProgram1 Time (ms)\tProgram2 Time (ms)");
+        System.out.println("Input Size\tProgram1\tProgram2\tProgram3\tProgram4\tProgram5A\tProgram5B");
 
         for (int n : inputSizes) {
             final int[][] testData = generateTestData(n, maxWidth, maxHeight);
@@ -50,19 +50,44 @@ public class ComparativeStudy {
             long endTime2 = System.currentTimeMillis();
             long duration2 = (endTime2 - startTime2);
 
-            System.out.println(n + "\t\t" + duration1 + "\t\t\t" + duration2);
+            long startTime3 = System.currentTimeMillis();
+            Program3.program3(n, maxWidth, testData[0], testData[1]);
+            long endTime3 = System.currentTimeMillis();
+            long duration3 = (endTime3 - startTime3);
+
+            long startTime4 = System.currentTimeMillis();
+            Program4.program4(n, maxWidth, testData[0], testData[1]);
+            long endTime4 = System.currentTimeMillis();
+            long duration4 = (endTime4 - startTime4);
+
+            long startTime5A = System.currentTimeMillis();
+            Program5A.program5A(n, maxWidth, testData[0], testData[1]);
+            long endTime5A = System.currentTimeMillis();
+            long duration5A = (endTime5A - startTime5A);
+
+            long startTime5B = System.currentTimeMillis();
+            Program5B.program5B(n, maxWidth, testData[0], testData[1]);
+            long endTime5B = System.currentTimeMillis();
+            long duration5B = (endTime5B - startTime5B);
+
+            System.out.println(n + "\t\t" + duration1 + "\t\t\t" + duration2 + "\t\t\t" + duration3 + "\t\t\t" + duration4 + "\t\t\t" + duration5A + "\t\t\t" + duration5B);
+
         }
     }
 
     public static void main(String[] args) {
-        int[] inputSizes = {100000, 250000, 500000, 1000000, 10000000};
+        int[] inputSizes = {1000, 2500, 5000, 7500, 10000};
         int maxWidth = 100;
         int maxHeight = 100;
 
         /* Run each program once to "warm" it up and make sure first result is accurate due to Java using JIT compilation */
-        final int[][] testData = generateTestData(inputSizes[0], maxWidth, maxHeight);
-        Program1.program1(inputSizes[0], maxWidth, testData[0], testData[1]);
-        Program2.program2(inputSizes[0], maxWidth, testData[0], testData[1]);
+        final int[][] warmupData = generateTestData(inputSizes[0], maxWidth, maxHeight);
+        Program1.program1(inputSizes[0], maxWidth, warmupData[0], warmupData[1]);
+        Program2.program2(inputSizes[0], maxWidth, warmupData[0], warmupData[1]);
+        Program3.program3(inputSizes[0], maxWidth, warmupData[0], warmupData[1]);
+        Program4.program4(inputSizes[0], maxWidth, warmupData[0], warmupData[1]);
+        Program5A.program5A(inputSizes[0], maxWidth, warmupData[0], warmupData[1]);
+        Program5B.program5B(inputSizes[0], maxWidth, warmupData[0], warmupData[1]);
 
         runExperiments(inputSizes, maxWidth, maxHeight);
     }

@@ -11,7 +11,7 @@ class Program5B{
     * @param widths array of widths of the statues
     * @return Result object containing the number of platforms, total height of the statues and the number of statues on each platform
     */
-    private static Result program5B(int n, int w, int[] heights, int[] widths) {
+    public static Result program5B(int n, int w, int[] heights, int[] widths) {
         // Initialize the DP array to store minimum height costs for arranging first 'i' sculptures
         int[] dp = new int[n + 1];
         Arrays.fill(dp, Integer.MAX_VALUE); // Set each element to a large value initially
