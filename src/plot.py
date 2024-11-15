@@ -10,19 +10,21 @@ program4_times = [5, 18, 165, 286, 342]
 program5a_times = [0, 0, 1, 1, 1]
 program5b_times = [1, 0, 1, 1, 1]
 
+metrics = [0.030691329957631498, 0.036264616370334776, 0.03268260467573636, 0.03388353569833931, 0.03457488397734411]
+
 #plt.plot(input_sizes, program1_times, label='Program1', marker='o', color='blue')
 #plt.plot(input_sizes, program2_times, label='Program2', marker='o', color='orange')
 #plt.plot(input_sizes, program3_times, label='Program3', marker='o', color='green')
 #plt.plot(input_sizes, program4_times, label='Program4', marker='o', color='red')
-plt.plot(input_sizes, program5a_times, label='Program5A', marker='o', color='purple')
-plt.plot(input_sizes, program5b_times, label='Program5B', marker='o', color='pink')
-
-
+#plt.plot(input_sizes, program5a_times, label='Program5A', marker='o', color='purple')
+#plt.plot(input_sizes, program5b_times, label='Program5B', marker='o', color='pink')
+plt.plot(input_sizes, metrics, label='Output Quality')
 
 plt.xlabel('Input Size')
-plt.ylabel('Execution Time (ms)')
+# plt.ylabel('Execution Time (ms)')
+plt.ylabel('Relative Error')
 
-plt.title('Execution Time vs Input Size')
+plt.title('Program 1 vs Program 4')
 plt.ticklabel_format(style='plain', axis='x')
 
 
